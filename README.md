@@ -1,1 +1,1 @@
-# Recipe-Recipe-App-React-Native-Nodejs
+# Smart-Recipe-App-React-Native-Nodejs
