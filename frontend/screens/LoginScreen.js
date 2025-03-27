@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ImageBackground, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import { loginUser } from '../utils/authService'; // Import login function
+import { loginUser } from '../utils/authService';
 
 const LoginScreen = ({ navigation, handleLogin }) => {
   const { control, handleSubmit, reset } = useForm();
@@ -13,8 +13,8 @@ const LoginScreen = ({ navigation, handleLogin }) => {
       const response = await loginUser(data.email, data.password);
       if (response.token) {
         Alert.alert("Success", "Login successful!");
-        reset(); // Reset form fields
-        handleLogin(); // Update authentication state
+        reset();
+        handleLogin();
       } else {
         Alert.alert("Login Failed", response.message || "Invalid credentials");
       }
@@ -27,49 +27,60 @@ const LoginScreen = ({ navigation, handleLogin }) => {
 
   return (
     <ImageBackground source={require('../assets/Wallpaper.png')} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
+      <View style={styles.overlay}>
 
-        <Controller
-          control={control}
-          name="email"
-          rules={{ required: "Email is required" }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
+        <View style={styles.logoContainer}>
+          <Text style={styles.appName}>Kitchen Helper</Text>
+          <Text style={styles.subtitle}>Your Smart Kitchen Companion</Text>
+        </View>
 
-        <Controller
-          control={control}
-          name="password"
-          rules={{ required: "Password is required" }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
+        <View style={styles.card}>
+          <Text style={styles.title}>Welcome Back</Text>
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Login</Text>}
-        </TouchableOpacity>
+          <Controller
+            control={control}
+            name="email"
+            rules={{ required: "Email is required" }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Email Address"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
-        <TouchableOpacity style={[styles.button, styles.signupButton]} onPress={() => navigation.navigate('Signup')}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
+          <Controller
+            control={control}
+            name="password"
+            rules={{ required: "Password is required" }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+
+          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)} disabled={loading}>
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Login</Text>}
+          </TouchableOpacity>
+
+          <View style={styles.signupContainer}>
+            <Text style={styles.signupText}>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+              <Text style={styles.signupLink}> Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </ImageBackground>
   );
@@ -80,39 +91,80 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
   },
-  container: {
+  overlay: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  appName: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFD700',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#fff',
+    marginTop: 5,
+  },
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    padding: 25,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#FF8700',
     fontWeight: 'bold',
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
     borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: '#f9f9f9',
     marginBottom: 15,
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  },
+  forgotPassword: {
+    alignItems: 'flex-end',
+    marginBottom: 20,
+  },
+  forgotText: {
+    color: '#FF6F61',
+    fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#FF6F61',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginVertical: 10,
-  },
-  signupButton: {
-    backgroundColor: '#FF5722',
+    elevation: 2,
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  signupText: {
+    color: '#666',
+  },
+  signupLink: {
+    color: '#FF6F61',
     fontWeight: 'bold',
   },
 });
